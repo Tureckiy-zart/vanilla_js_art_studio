@@ -96,11 +96,14 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/modal */ "./src/js/modules/modal.js");
+/* harmony import */ var _modules_sliders__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/sliders */ "./src/js/modules/sliders.js");
+
 
 window.addEventListener("DOMContentLoaded", () => {
-  "use strict";
+  "use strict"; // modals();
 
-  Object(_modules_modal__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  Object(_modules_sliders__WEBPACK_IMPORTED_MODULE_1__["default"])(".feedback-slider-item", "", ".main-prev-btn", ".main-next-btn");
+  Object(_modules_sliders__WEBPACK_IMPORTED_MODULE_1__["default"])(".main-slider-item", "vertical");
 });
 
 /***/ }),
@@ -193,31 +196,106 @@ const modals = () => {
     let scrollWidth = div.offsetWidth - div.clientWidth;
     div.remove();
     return scrollWidth;
-  } //   function openByScroll(selector) {
-  //     window.addEventListener("scroll", () => {
-  //       let scrollHeight = Math.max(
-  //         document.documentElement.scrollHeight,
-  //         document.body.scrollHeight
-  //       );
-  //       if (
-  //         !btnPressed &&
-  //         window.pageYOffset + document.documentElement.clientHeight >=
-  //           scrollHeight
-  //       ) {
-  //         document.querySelector(selector).click();
-  //       }
-  //     });
-  //   }
+  }
 
+  function openByScroll(selector) {
+    window.addEventListener("scroll", () => {
+      let scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      console.log("666 :>> ", 666);
+
+      if (!btnPressed && window.pageYOffset + document.documentElement.clientHeight >= scrollHeight - 30) {
+        document.querySelector(selector).click();
+      }
+    });
+  }
 
   bindModal(".button-design", ".popup-design", ".popup-design .popup-close");
-  bindModal(".button-consultation", ".popup-consultation", ".popup-consultation .popup-close"); //   bindModal(".fixed-gift", ".popup-gift", ".popup-gift .popup-close", true);
-  //   openByScroll(".fixed-gift");
-
-  showModalByTime(".popup-consultation", 60000);
+  bindModal(".button-consultation", ".popup-consultation", ".popup-consultation .popup-close");
+  bindModal(".fixed-gift", ".popup-gift", ".popup-gift .popup-close", true);
+  openByScroll(".fixed-gift"); // showModalByTime(".popup-consultation", 60000);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
+
+/***/ }),
+
+/***/ "./src/js/modules/sliders.js":
+/*!***********************************!*\
+  !*** ./src/js/modules/sliders.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const sliders = function (slides, direction) {
+  let prev = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+  let next = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
+  let slideIndex = 1,
+      paused = false;
+  const items = document.querySelectorAll(slides);
+  console.log(`items`, items);
+
+  const showSlides = n => {
+    if (n > items.length) slideIndex = 1;
+    if (n < 1) slideIndex = items.length;
+    items.forEach(item => {
+      item.classList.add("animated");
+      item.style.display = "none";
+    });
+    items[slideIndex - 1].style.display = "block";
+  };
+
+  showSlides(slideIndex);
+
+  const changeSlides = n => {
+    showSlides(slideIndex += n);
+  };
+
+  try {
+    const prevBtn = document.querySelector(prev),
+          nextBtn = document.querySelector(next);
+    prevBtn.addEventListener("click", () => {
+      changeSlides(-1);
+      items[slideIndex - 1].classList.remove("slideInLeft");
+      items[slideIndex - 1].classList.add("slideInRight");
+    });
+    nextBtn.addEventListener("click", () => {
+      changeSlides(1);
+      items[slideIndex - 1].classList.remove("slideInRight");
+      items[slideIndex - 1].classList.add("slideInLeft");
+    });
+  } catch (error) {
+    console.log(`error`, error);
+  }
+
+  const activateSliderChange = () => {
+    if (direction === "vertical") {
+      paused = setInterval(() => {
+        changeSlides(1);
+        items[slideIndex - 1].classList.add("slideInDown");
+      }, 3000);
+    } else {
+      paused = setInterval(() => {
+        changeSlides(1);
+        items[slideIndex - 1].classList.remove("slideInRight");
+        items[slideIndex - 1].classList.add("slideInLeft");
+      }, 3000);
+    }
+  };
+
+  activateSliderChange();
+  items[0].parentNode.addEventListener("mouseenter", () => {
+    console.log(" items[0] :>> ", items[0]);
+    console.log(`items[0].parentNode`, items[0].parentNode);
+    clearInterval(paused);
+  });
+  items[0].parentNode.addEventListener("mouseleave", () => {
+    activateSliderChange();
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (sliders);
 
 /***/ })
 

@@ -93,22 +93,22 @@ const modals = () => {
     return scrollWidth;
   }
 
-  //   function openByScroll(selector) {
-  //     window.addEventListener("scroll", () => {
-  //       let scrollHeight = Math.max(
-  //         document.documentElement.scrollHeight,
-  //         document.body.scrollHeight
-  //       );
-
-  //       if (
-  //         !btnPressed &&
-  //         window.pageYOffset + document.documentElement.clientHeight >=
-  //           scrollHeight
-  //       ) {
-  //         document.querySelector(selector).click();
-  //       }
-  //     });
-  //   }
+  function openByScroll(selector) {
+    window.addEventListener("scroll", () => {
+      let scrollHeight = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight
+      );
+      console.log("666 :>> ", 666);
+      if (
+        !btnPressed &&
+        window.pageYOffset + document.documentElement.clientHeight >=
+          scrollHeight - 30
+      ) {
+        document.querySelector(selector).click();
+      }
+    });
+  }
 
   bindModal(".button-design", ".popup-design", ".popup-design .popup-close");
   bindModal(
@@ -116,9 +116,9 @@ const modals = () => {
     ".popup-consultation",
     ".popup-consultation .popup-close"
   );
-  //   bindModal(".fixed-gift", ".popup-gift", ".popup-gift .popup-close", true);
-  //   openByScroll(".fixed-gift");
-  showModalByTime(".popup-consultation", 60000);
+  bindModal(".fixed-gift", ".popup-gift", ".popup-gift .popup-close", true);
+  openByScroll(".fixed-gift");
+  // showModalByTime(".popup-consultation", 60000);
 };
 
 export default modals;
